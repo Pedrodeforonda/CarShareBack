@@ -1,12 +1,13 @@
 import express from 'express'
 import mongoose from 'mongoose'
-import User from './models/user.js'
 import cors from 'cors'
+import authController from '../CarShareBack/controllers/authController.js';
+
 
 const app = express()
 app.use(express.json())
 app.use(cors())
-
+app.use('/auth', authController);
 
 
 const start = async () => {
@@ -28,7 +29,4 @@ const start = async () => {
   })
 }
 
-start().then(() => {
-    const user = new User({ email: "hol", name: "name", password: "hola" })
-    user.save()
-})
+start()
