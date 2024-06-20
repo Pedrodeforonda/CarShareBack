@@ -18,7 +18,7 @@ const register = async (userData) => {
 
     await user.save();
 
-    return user.email;
+    return user;
 };
 
 const login = async (userData) => {
@@ -36,7 +36,7 @@ const login = async (userData) => {
         throw new Error('Invalid Credentials');
     }
 
-    return user.email;
+    return user;
 };
 
 export default { register, login };
