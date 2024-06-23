@@ -7,10 +7,9 @@ const getFuelConsumption = async (sessionId) => {
         throw new Error('Session not found');
     }
 
-    const carConsumption = session.car.consumedFuel;
     const distance = session.distance;
 
-    return (distance / carConsumption) * 1013;
+    return (distance / 11.5) * 1013;
 }
 
 const getAllSessions = async () => {
