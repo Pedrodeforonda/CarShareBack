@@ -30,7 +30,7 @@ const login = async (userData) => {
         throw new Error('Invalid Credentials');
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = password == user.password;
 
     if (!isMatch) {
         throw new Error('Invalid Credentials');
