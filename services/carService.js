@@ -1,4 +1,5 @@
 import Car from '../models/car.js';
+import User from '../models/user.js';
 
 const registerCar = async (carData) => {
     const { model, branch, year, admin, users } = carData;
@@ -16,4 +17,8 @@ const registerCar = async (carData) => {
     return car;
 };
 
-export default { registerCar };
+const findUsers = async () => {
+    return User.find(undefined, undefined, undefined);
+}
+
+export default { registerCar, findUsers };

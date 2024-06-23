@@ -12,4 +12,16 @@ router.post('/car', async (req, res) => {
     }
 });
 
+router.get('/users', async (req, res) => {
+    try {
+        const users = await carService.findUsers(); // Get all users
+        res.json(users); // Send the users as a response
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+});
+
+
+
 export default router;

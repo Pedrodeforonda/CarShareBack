@@ -1,4 +1,3 @@
-import bcrypt from 'bcrypt';
 import User from '../models/user.js';
 
 const register = async (userData) => {
@@ -30,7 +29,7 @@ const login = async (userData) => {
         throw new Error('Invalid Credentials');
     }
 
-    const isMatch = password == user.password;
+    const isMatch = password === user.password;
 
     if (!isMatch) {
         throw new Error('Invalid Credentials');

@@ -5,7 +5,6 @@ import Location from "./location.js";
 const { Schema } = mongoose
 
 const sessionSchema = new Schema({
-    name: String,
     user: { type: Schema.Types.ObjectId, ref: User },
     car: { type: Schema.Types.ObjectId, ref: Car },
     location: [Location.schema],

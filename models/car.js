@@ -5,7 +5,7 @@ const carSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    branch: {
+    brand: {
         type: String,
         required: true,
     },
