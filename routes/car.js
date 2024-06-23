@@ -5,43 +5,43 @@ const router = express.Router();
 // Crear un nuevo auto
 router.post('/', async (req, res) => {
     try {
-        const { brand, model, year } = req.body;
-        const newCar = new Car({ brand, model, year });
-        await newUser.save();
-        res.status(201).json(newUser);
+        const { model, branch, year, consumedFuel, admin, users } = req.body;
+        const newCar = new Car({ model, branch, year, consumedFuel, admin, users });
+        await newCar.save();
+        res.status(201).json(newCar);
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
 });
 
-// Obtener todos los usuarios
+// Obtener todos los autos
 router.get('/', async (req, res) => {
     try {
-        const users = await User.find();
-        res.json(users);
+        const cars = await Car.find();
+        res.json(cars);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
 
-// Actualizar un usuario
+// Actualizar un auto
 router.put('/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        const { name, email, password } = req.body;
-        const user = await User.findByIdAndUpdate(id, { name, email, password }, { new: true });
-        res.json(user);
+        const { model, branch, year, consumedFuel, admin, users } = req.body;
+        const car = await Car.findByIdAndUpdate(id, { model, branch, year, consumedFuel, admin, users }, { new: true });
+        res.json(car);
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
 });
 
-// Eliminar un usuario
+// Eliminar un auto
 router.delete('/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        await User.findByIdAndDelete(id);
-        res.json({ message: 'User deleted' });
+        await Car.findByIdAndDelete(id);
+        res.json({ message: 'Car deleted' });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

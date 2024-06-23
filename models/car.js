@@ -1,19 +1,31 @@
 import mongoose from "mongoose";
 
 const carSchema = new mongoose.Schema({
-    brand: {
-        type: String,
-        required: true,
-    },
     model: {
         type: String,
         required: true,
     },
-    year: {
+    branch: {
         type: String,
         required: true,
     },
+    year: {
+        type: Number,
+        required: true,
+    },
+    consumedFuel: {
+        type: Number,
+        required: true,
+    },
+    admin: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+    },
+    users: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+    }],
 });
 
 export default mongoose.model('Car', carSchema);
-
