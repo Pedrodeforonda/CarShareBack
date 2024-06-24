@@ -22,4 +22,14 @@ router.get('/sessions', async (req, res) => {
     }
 });
 
+router.post('/cost', async (req, res) => {
+    try {
+        const totalCost = await userService.getTotalCost(req.body);
+        res.json({ msg: 'Total cost gotten', totalCost });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+});
+
 export default router;

@@ -29,10 +29,10 @@ class MqttHandler {
             console.log(`${message} received from topic ${topic}`)
             switch (topic) {
                 case 'carshare/inel00/session/start':
-                    createSession()
+                    createSession(message)
                     return
                 case 'carshare/inel00/session/stop':
-                    endSession()
+                    endSession(message)
                     return
                 case 'carshare/inel00/01/data/live':
                     appendData(message)

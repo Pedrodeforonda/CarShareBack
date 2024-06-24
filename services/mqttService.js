@@ -1,14 +1,19 @@
 import Session from '../models/session.js'
 import Location from '../models/location.js'
 
-export const createSession = async () => {
+export const createSession = async (userId) => {
     await Session.findOneAndUpdate(
         { isActive: true },
         { $set: { isActive: false } },
         { new: false },
     )
 
-    const newSession = new Session()
+    const newSession = new Session(
+        {
+            user: userId,
+            isActive: true,
+        }
+    )
     await newSession.save()
 }
 

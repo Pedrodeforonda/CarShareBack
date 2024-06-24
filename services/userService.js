@@ -16,4 +16,16 @@ const getAllSessions = async () => {
     return Session.find(undefined, undefined, undefined);
 }
 
-export default { getFuelConsumption, getAllSessions };
+const getTotalCost = async (userId) => {
+    const sessions = getAllSessions();
+
+    let totalCost = 0;
+    for (let session of sessions) {
+        if (session.user === userId) {
+            totalCost += ((session.distance / 11.5) * 1013);
+        }
+    }
+}
+
+
+export default { getFuelConsumption, getAllSessions, getTotalCost };
