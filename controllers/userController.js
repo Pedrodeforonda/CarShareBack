@@ -24,7 +24,7 @@ router.get('/sessions', async (req, res) => {
 
 router.post('/cost', async (req, res) => {
     try {
-        const totalCost = await userService.getTotalCost(req.body);
+        const totalCost = await userService.getTotalCost(req.body.user);
         res.json({ msg: 'Total cost gotten', totalCost });
     } catch (err) {
         console.error(err.message);

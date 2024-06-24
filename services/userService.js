@@ -17,14 +17,14 @@ const getAllSessions = async () => {
 }
 
 const getTotalCost = async (userId) => {
-    const sessions = getAllSessions();
+    const sessions = await Session.find({ user: userId }).populate('user');
 
     let totalCost = 0;
     for (let session of sessions) {
-        if (session.user === userId) {
-            totalCost += ((session.distance / 11.5) * 1013);
-        }
+        totalCost += ((session.distance / 11.5) * 1013);
     }
+
+    return totalCost;
 }
 
 
