@@ -13,7 +13,7 @@ const getFuelConsumption = async (sessionId) => {
 }
 
 const getAllSessions = async () => {
-    return Session.find(undefined, undefined, undefined);
+    return Session.find(undefined, undefined, undefined).populate('user');
 }
 
 const getTotalCost = async (userId) => {
