@@ -1,5 +1,6 @@
 import Session from '../models/session.js'
 import Location from '../models/location.js'
+import User from '../models/user.js'
 
 export const createSession = async (userId) => {
     await Session.findOneAndUpdate(
@@ -8,9 +9,11 @@ export const createSession = async (userId) => {
         { new: false },
     )
 
+    const user = User.findOne({ _id: userId })
+
     const newSession = new Session(
         {
-            user: userId,
+            user: user,
             isActive: true,
         }
     )
