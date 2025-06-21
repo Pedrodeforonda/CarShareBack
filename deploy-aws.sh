@@ -1,27 +1,45 @@
 #!/bin/bash
 
-# Script simple para levantar CarShare Backend en AWS
+echo "📁 Directorio # 3. Levantar MongoDB con Docker
+echo "🐳 Iniciando MongoDB..."
+docker-compose up -d
+
+# 4. Esperar a que MongoDB esté listo
+echo "⏳ Esperando que MongoDB esté listo..."
+sleep 10
+
+# 5. Verificar que MongoDB está funcionando
+echo "✅ Verificando MongoDB..."
+docker-compose ps
+
+# 6. Iniciar la aplicación en modo desarrollo
+echo "🚀 Iniciando aplicación en modo desarrollo..."
+npm run dev &
+
+# 1. Instalar dependencias
+echo "📦 Instalando dependencias..."
+npm install
+
+# 2. Verificar que existe docker-compose.yml
+if [ ! -f "docker-compose.yml" ]; then
+    echo "❌ Error: No se encontró docker-compose.yml"
+    exit 1
+fi
+
+# 3. Levantar MongoDB con Docker
+echo "🐳 Iniciando MongoDB..."
+docker-compose up -dsimple para levantar CarShare Backend en AWS
 echo "🚀 Levantando CarShare Backend en AWS (Desarrollo)"
 echo "================================================="
 
-# Variables
-PROJECT_DIR="/home/ubuntu/carshare-backend"
-REPO_URL="git@github.com:Pedrodeforonda/CarShareBack.git"
-
-# 1. Crear directorio del proyecto si no existe
-echo "📁 Configurando directorio del proyecto..."
-sudo mkdir -p $PROJECT_DIR
-sudo chown -R $USER:$USER $PROJECT_DIR
-cd $PROJECT_DIR
-
-# 2. Clonar o actualizar el repositorio
-if [ ! -d ".git" ]; then
-    echo "📥 Clonando repositorio..."
-    git clone $REPO_URL .
-else
-    echo "🔄 Actualizando repositorio..."
-    git pull origin main
+# Verificar que estamos en el directorio correcto
+if [ ! -f "package.json" ]; then
+    echo "❌ Error: No se encontró package.json"
+    echo "Asegúrate de estar en el directorio del proyecto CarShareBack"
+    exit 1
 fi
+
+echo "� Directorio actual: $(pwd)"
 
 # 3. Instalar dependencias
 echo "📦 Instalando dependencias..."
