@@ -26,6 +26,8 @@ export const config = {
   isDevelopment: configResult.data.NODE_ENV === 'development',
   isProduction: configResult.data.NODE_ENV === 'production',
   isTest: configResult.data.NODE_ENV === 'test',
-  mongoConnectionString: `mongodb://${configResult.data.MONGO_URL}:27017/carshare`,
+  mongoConnectionString: configResult.data.MONGO_USER && configResult.data.MONGO_PASS 
+    ? `mongodb://${configResult.data.MONGO_USER}:${configResult.data.MONGO_PASS}@${configResult.data.MONGO_URL}:27017/carshare`
+    : `mongodb://${configResult.data.MONGO_URL}:27017/carshare`,
   mqttConnectionString: `mqtt://${configResult.data.MQTT_HOST}:${configResult.data.MQTT_PORT}`,
 } as const;
