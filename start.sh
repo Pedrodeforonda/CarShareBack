@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# Script simple para iniciar CarShare Backend
+# Script para iniciar CarShare Backend completo con Docker
 
-echo "🚀 Iniciando CarShare Backend..."
+echo "🚀 Iniciando CarShare Backend completo..."
 
 # Verificar que estamos en el directorio correcto
 if [ ! -f "package.json" ]; then
@@ -11,35 +11,34 @@ if [ ! -f "package.json" ]; then
     exit 1
 fi
 
-# Iniciar MongoDB
-echo "🐳 Iniciando MongoDB..."
-docker-compose up -d
-
-# Esperar un poco
-echo "⏳ Esperando que MongoDB esté listo..."
-sleep 5
-
-# Verificar que MongoDB está corriendo
-if docker-compose ps | grep -q "Up"; then
-    echo "✅ MongoDB iniciado correctamente"
-else
-    echo "❌ Error iniciando MongoDB"
+# Verificar que Docker está corriendo
+if ! docker info > /dev/null 2>&1; then
+    echo "❌ Error: Docker no está corriendo"
+    echo "Inicia Docker y vuelve a intentar"
     exit 1
 fi
 
-# Instalar dependencias si es necesario
-if [ ! -d "node_modules" ]; then
-    echo "📦 Instalando dependencias..."
-    npm install
-fi
+# Construir e iniciar todos los servicios
+echo "🐳 Construyendo e iniciando todos los servicios..."
+docker-compose up --build -d
 
-# Iniciar el backend
-echo "🚀 Iniciando backend en modo desarrollo..."
+# Esperar un poco para que los servicios estén listos
+echo "⏳ Esperando que los servicios estén listos..."
+sleep 15
+
+# Verificar que todos los servicios están corriendo
+echo "✅ Verificando servicios..."
+docker-compose ps
+
+echo ""
+echo "🎉 ¡CarShare Backend iniciado completamente!"
 echo "📊 URLs disponibles:"
-echo "   - Backend: http://localhost:3001"
+echo "   - Backend API: http://localhost:3001"
 echo "   - MongoDB Express: http://localhost:8081"
 echo ""
-echo "🛑 Para detener: Ctrl+C y luego ejecuta ./stop.sh"
+echo "� Comandos útiles:"
+echo "   - Ver logs del backend: docker-compose logs backend"
+echo "   - Ver logs de MongoDB: docker-compose logs mongo"
+echo "   - Detener todo: ./stop.sh"
+echo "   - Ver todos los logs: docker-compose logs -f"
 echo ""
-
-npm run dev

@@ -1,13 +1,65 @@
 services:
+  # Base de datos MongoDB
   mongo:
-    image: mongo
-    ports:
-      - '27017:27017'
-
-  mongo-express:
-    image: mongo-express
+    image: mongo:7.0
+    container_name: carshare-mongo
     restart: always
     ports:
-      - 8081:8081
+      - '27017:27017'
     environment:
-      ME_CONFIG_MONGODB_URL: mongodb://mongo:27017/
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+      MONGO_INITDB_DATABASE: carshare
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - carshare-network
+
+  # Interface web para MongoDB
+  mongo-express:
+    image: mongo-express:1.0.0
+    container_name: carshare-mongo-express
+    restart: always
+    ports:
+      - '8081:8081'
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+      ME_CONFIG_MONGODB_ADMINPASSWORD: admin
+      ME_CONFIG_MONGODB_URL: mongodb://admin:admin@mongo:27017/
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: admin
+    depends_on:
+      - mongo
+    networks:
+      - carshare-network
+
+  # Backend de la aplicación
+  backend:
+    build: .
+    container_name: carshare-backend
+    restart: always
+    ports:
+      - '3001:3001'
+    environment:
+      NODE_ENV: development
+      PORT: 3001
+      MONGO_URL: mongo
+      MONGO_USER: admin
+      MONGO_PASS: admin
+      MQTT_HOST: 54.235.225.241
+      MQTT_PORT: 1883
+      BCRYPT_ROUNDS: 12
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      - mongo
+    networks:
+      - carshare-network
+
+volumes:
+  mongo_data:
+
+networks:
+  carshare-network:
+    driver: bridge

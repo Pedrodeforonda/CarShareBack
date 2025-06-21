@@ -5,6 +5,7 @@ export const connectDatabase = async (): Promise<void> => {
   try {
     const connectionString = config.mongoConnectionString;
     console.log('🔗 Connecting to MongoDB...');
+    console.log('🔍 Connection string:', connectionString);
     
     await mongoose.connect(connectionString, {
       maxPoolSize: 10,
