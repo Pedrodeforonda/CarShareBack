@@ -6,7 +6,7 @@ export class CarResponseDto {
   model: string;
   brand: string;
   year: number;
-  consumedFuel: number;
+  fuelEfficiency: number;
   admin: string;
   users: string[];
   createdAt?: Date;
@@ -17,7 +17,7 @@ export class CarResponseDto {
     this.model = car.model;
     this.brand = car.brand;
     this.year = car.year;
-    this.consumedFuel = car.consumedFuel;
+    this.fuelEfficiency = car.fuelEfficiency;
     this.admin = car.admin.toString();
     this.users = car.users.map(user => user.toString());
     this.createdAt = car.createdAt;

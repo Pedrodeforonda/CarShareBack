@@ -14,9 +14,10 @@ export const registerCarSchema = z.object({
       .int('Year must be an integer')
       .min(1900, 'Year must be 1900 or later')
       .max(new Date().getFullYear() + 1, 'Year cannot be in the future'),
-    consumedFuel: z.number()
-      .min(0, 'Consumed fuel must be a positive number')
-      .default(0),
+    fuelEfficiency: z.number()
+      .min(1, 'Fuel efficiency must be at least 1 km/liter')
+      .max(50, 'Fuel efficiency cannot exceed 50 km/liter')
+      .default(11.5),
     admin: z.string()
       .regex(/^[0-9a-fA-F]{24}$/, 'Invalid admin ID format'),
     users: z.array(z.string().regex(/^[0-9a-fA-F]{24}$/, 'Invalid user ID format'))

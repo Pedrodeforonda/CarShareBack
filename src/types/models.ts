@@ -12,7 +12,7 @@ export interface ICar {
   model: string;
   brand: string;
   year: number;
-  consumedFuel: number;
+  fuelEfficiency: number; // km per liter
   admin: Types.ObjectId;
   users: Types.ObjectId[];
 }

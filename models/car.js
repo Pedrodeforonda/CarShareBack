@@ -13,9 +13,12 @@ const carSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
-    consumedFuel: {
+    fuelEfficiency: {
         type: Number,
         required: true,
+        min: 1,
+        max: 50,
+        default: 11.5
     },
     admin: {
         type: mongoose.Schema.Types.ObjectId,

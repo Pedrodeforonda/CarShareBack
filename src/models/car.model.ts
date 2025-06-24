@@ -22,11 +22,12 @@ const carSchema = new Schema<ICar, CarModel>({
     min: [1900, 'Year must be 1900 or later'],
     max: [new Date().getFullYear() + 1, 'Year cannot be in the future']
   },
-  consumedFuel: {
+  fuelEfficiency: {
     type: Number,
-    required: [true, 'Consumed fuel is required'],
-    min: [0, 'Consumed fuel must be a positive number'],
-    default: 0
+    required: [true, 'Fuel efficiency is required'],
+    min: [1, 'Fuel efficiency must be at least 1 km/liter'],
+    max: [50, 'Fuel efficiency cannot exceed 50 km/liter'],
+    default: 11.5
   },
   admin: {
     type: Schema.Types.ObjectId,
