@@ -46,7 +46,7 @@ services:
       MONGO_URL: mongo
       MONGO_USER: admin
       MONGO_PASS: admin
-      MQTT_HOST: 107.22.158.177
+      MQTT_HOST: 3.89.119.110
       MQTT_PORT: 1883
       BCRYPT_ROUNDS: 12
     volumes:
