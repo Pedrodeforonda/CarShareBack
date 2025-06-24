@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { CarService } from '../services/car.service.js';
 import { ResponseHelper } from '../utils/response.js';
-import { RegisterCarRequest, CarIdRequest, AdminIdRequest, UserIdParamRequest } from '../validations/car.validation.js';
+import { RegisterCarRequest, CarIdRequest, AdminIdRequest, UserIdParamRequest, DeleteCarRequest } from '../validations/car.validation.js';
 
 export class CarController {
   private carService: CarService;
@@ -59,6 +59,28 @@ export class CarController {
       const cars = await this.carService.findCarsByUser(req.params.userId);
       res.status(200).json(
         ResponseHelper.success(cars, 'Cars retrieved successfully')
+      );
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  deleteCar = async (req: Request<CarIdRequest>, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      await this.carService.deleteCar(req.params.id);
+      res.status(200).json(
+        ResponseHelper.success(null, 'Car deleted successfully')
+      );
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  deleteCarWithAdmin = async (req: Request<DeleteCarRequest['params'], {}, DeleteCarRequest['body']>, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      await this.carService.deleteCar(req.params.id, req.body.adminId);
+      res.status(200).json(
+        ResponseHelper.success(null, 'Car deleted successfully')
       );
     } catch (error) {
       next(error);

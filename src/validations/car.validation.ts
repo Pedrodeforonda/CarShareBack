@@ -44,7 +44,17 @@ export const userIdParamSchema = z.object({
   })
 });
 
+export const deleteCarSchema = z.object({
+  params: z.object({
+    id: z.string().regex(/^[0-9a-fA-F]{24}$/, 'Invalid car ID format')
+  }),
+  body: z.object({
+    adminId: z.string().regex(/^[0-9a-fA-F]{24}$/, 'Invalid admin ID format')
+  })
+});
+
 export type RegisterCarRequest = z.infer<typeof registerCarSchema>['body'];
 export type CarIdRequest = z.infer<typeof carIdSchema>['params'];
 export type AdminIdRequest = z.infer<typeof adminIdSchema>['params'];
 export type UserIdParamRequest = z.infer<typeof userIdParamSchema>['params'];
+export type DeleteCarRequest = z.infer<typeof deleteCarSchema>;

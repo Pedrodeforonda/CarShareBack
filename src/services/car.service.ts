@@ -1,6 +1,6 @@
 import Car from '../models/car.model.js';
 import User from '../models/user.model.js';
-import { NotFoundError } from '../utils/errors.js';
+import { NotFoundError, UnauthorizedError } from '../utils/errors.js';
 import { RegisterCarRequest } from '../validations/car.validation.js';
 import { CarResponseDto } from '../dtos/car.dto.js';
 import { UserResponseDto } from '../dtos/user.dto.js';
@@ -65,5 +65,20 @@ export class CarService {
       .sort({ createdAt: -1 });
 
     return CarResponseDto.fromCars(cars);
+  }
+
+  async deleteCar(carId: string, adminId?: string): Promise<void> {
+    const car = await Car.findById(carId);
+    
+    if (!car) {
+      throw new NotFoundError('Car');
+    }
+
+    // If adminId is provided, verify that the user is the admin of the car
+    if (adminId && car.admin.toString() !== adminId) {
+      throw new UnauthorizedError('Only the car admin can delete this car');
+    }
+
+    await Car.findByIdAndDelete(carId);
   }
 }

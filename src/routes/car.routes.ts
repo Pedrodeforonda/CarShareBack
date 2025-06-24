@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { CarController } from '../controllers/car.controller.js';
 import { validateRequest } from '../middlewares/validation.middleware.js';
-import { registerCarSchema, carIdSchema, adminIdSchema, userIdParamSchema } from '../validations/car.validation.js';
+import { registerCarSchema, carIdSchema, adminIdSchema, userIdParamSchema, deleteCarSchema } from '../validations/car.validation.js';
 
 const router = Router();
 const carController = new CarController();
@@ -40,5 +40,19 @@ router.get('/admin/:adminId', validateRequest(adminIdSchema), carController.getC
  * @access  Public
  */
 router.get('/user/:userId', validateRequest(userIdParamSchema), carController.getCarsByUser);
+
+/**
+ * @route   DELETE /car/:id
+ * @desc    Delete car by ID (simple delete)
+ * @access  Public
+ */
+router.delete('/:id', validateRequest(carIdSchema), carController.deleteCar);
+
+/**
+ * @route   DELETE /car/:id/admin
+ * @desc    Delete car by ID with admin verification
+ * @access  Public
+ */
+router.delete('/:id/admin', validateRequest(deleteCarSchema), carController.deleteCarWithAdmin);
 
 export default router;
