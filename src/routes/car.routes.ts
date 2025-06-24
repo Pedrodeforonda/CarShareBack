@@ -1,8 +1,7 @@
 import { Router } from 'express';
 import { CarController } from '../controllers/car.controller.js';
 import { validateRequest } from '../middlewares/validation.middleware.js';
-import { registerCarSchema } from '../validations/car.validation.js';
-import { userIdSchema } from '../validations/user.validation.js';
+import { registerCarSchema, carIdSchema, adminIdSchema, userIdParamSchema } from '../validations/car.validation.js';
 
 const router = Router();
 const carController = new CarController();
@@ -26,20 +25,20 @@ router.get('/users', carController.getAllUsers);
  * @desc    Get car by ID
  * @access  Public
  */
-router.get('/:id', validateRequest(userIdSchema), carController.getCarById);
+router.get('/:id', validateRequest(carIdSchema), carController.getCarById);
 
 /**
  * @route   GET /car/admin/:adminId
  * @desc    Get cars by admin ID
  * @access  Public
  */
-router.get('/admin/:adminId', validateRequest(userIdSchema), carController.getCarsByAdmin);
+router.get('/admin/:adminId', validateRequest(adminIdSchema), carController.getCarsByAdmin);
 
 /**
  * @route   GET /car/user/:userId
  * @desc    Get cars by user ID
  * @access  Public
  */
-router.get('/user/:userId', validateRequest(userIdSchema), carController.getCarsByUser);
+router.get('/user/:userId', validateRequest(userIdParamSchema), carController.getCarsByUser);
 
 export default router;

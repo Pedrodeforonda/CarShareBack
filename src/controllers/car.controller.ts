@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { CarService } from '../services/car.service.js';
 import { ResponseHelper } from '../utils/response.js';
-import { RegisterCarRequest } from '../validations/car.validation.js';
+import { RegisterCarRequest, CarIdRequest, AdminIdRequest, UserIdParamRequest } from '../validations/car.validation.js';
 
 export class CarController {
   private carService: CarService;
@@ -32,7 +32,7 @@ export class CarController {
     }
   };
 
-  getCarById = async (req: Request<{ id: string }>, res: Response, next: NextFunction): Promise<void> => {
+  getCarById = async (req: Request<CarIdRequest>, res: Response, next: NextFunction): Promise<void> => {
     try {
       const car = await this.carService.findCarById(req.params.id);
       res.status(200).json(
@@ -43,7 +43,7 @@ export class CarController {
     }
   };
 
-  getCarsByAdmin = async (req: Request<{ adminId: string }>, res: Response, next: NextFunction): Promise<void> => {
+  getCarsByAdmin = async (req: Request<AdminIdRequest>, res: Response, next: NextFunction): Promise<void> => {
     try {
       const cars = await this.carService.findCarsByAdmin(req.params.adminId);
       res.status(200).json(
@@ -54,7 +54,7 @@ export class CarController {
     }
   };
 
-  getCarsByUser = async (req: Request<{ userId: string }>, res: Response, next: NextFunction): Promise<void> => {
+  getCarsByUser = async (req: Request<UserIdParamRequest>, res: Response, next: NextFunction): Promise<void> => {
     try {
       const cars = await this.carService.findCarsByUser(req.params.userId);
       res.status(200).json(
