@@ -5,7 +5,15 @@ import { SessionResponseDto, FuelConsumptionResponseDto, TotalCostResponseDto } 
 
 export class UserService {
   private readonly DEFAULT_FUEL_EFFICIENCY = 11.5; // km per liter (fallback if no car)
-  private readonly FUEL_COST_PER_LITER = 1013; // CLP per liter
+  
+  // Precios de combustible en Argentina (ARS por litro) - actualizados a 2025
+  private readonly FUEL_COSTS = {
+    'Nafta Super': 1200,   // ARS per liter
+    'Nafta Premium': 1400, // ARS per liter
+    'Diesel': 1250         // ARS per liter
+  };
+  
+  private readonly DEFAULT_FUEL_COST = this.FUEL_COSTS['Nafta Super']; // Default for cars without fuel type
 
   async getFuelConsumption(sessionId: string): Promise<FuelConsumptionResponseDto> {
     const session = await Session.findById(sessionId).populate('car');
@@ -16,13 +24,20 @@ export class UserService {
 
     const distance = session.distance;
     let fuelEfficiency = this.DEFAULT_FUEL_EFFICIENCY;
+    let fuelCostPerLiter = this.DEFAULT_FUEL_COST;
 
-    // Use car's fuel efficiency if available
-    if (session.car && (session.car as any).fuelEfficiency) {
-      fuelEfficiency = (session.car as any).fuelEfficiency;
+    // Use car's fuel efficiency and fuel type if available
+    if (session.car) {
+      const car = session.car as any;
+      if (car.fuelEfficiency) {
+        fuelEfficiency = car.fuelEfficiency;
+      }
+      if (car.fuelType && this.FUEL_COSTS[car.fuelType as keyof typeof this.FUEL_COSTS]) {
+        fuelCostPerLiter = this.FUEL_COSTS[car.fuelType as keyof typeof this.FUEL_COSTS];
+      }
     }
 
-    const fuelConsumption = (distance / fuelEfficiency) * this.FUEL_COST_PER_LITER;
+    const fuelConsumption = (distance / fuelEfficiency) * fuelCostPerLiter;
 
     return new FuelConsumptionResponseDto(sessionId, distance, fuelConsumption);
   }
@@ -72,13 +87,20 @@ export class UserService {
 
     for (const session of sessions) {
       let fuelEfficiency = this.DEFAULT_FUEL_EFFICIENCY;
+      let fuelCostPerLiter = this.DEFAULT_FUEL_COST;
       
-      // Use car's fuel efficiency if available
-      if (session.car && (session.car as any).fuelEfficiency) {
-        fuelEfficiency = (session.car as any).fuelEfficiency;
+      // Use car's fuel efficiency and fuel type if available
+      if (session.car) {
+        const car = session.car as any;
+        if (car.fuelEfficiency) {
+          fuelEfficiency = car.fuelEfficiency;
+        }
+        if (car.fuelType && this.FUEL_COSTS[car.fuelType as keyof typeof this.FUEL_COSTS]) {
+          fuelCostPerLiter = this.FUEL_COSTS[car.fuelType as keyof typeof this.FUEL_COSTS];
+        }
       }
 
-      const sessionCost = (session.distance / fuelEfficiency) * this.FUEL_COST_PER_LITER;
+      const sessionCost = (session.distance / fuelEfficiency) * fuelCostPerLiter;
       totalCost += sessionCost;
       totalDistance += session.distance;
     }

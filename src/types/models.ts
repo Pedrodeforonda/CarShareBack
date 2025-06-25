@@ -13,6 +13,7 @@ export interface ICar {
   brand: string;
   year: number;
   fuelEfficiency: number; // km per liter
+  fuelType: 'Nafta Super' | 'Nafta Premium' | 'Diesel';
   admin: Types.ObjectId;
   users: Types.ObjectId[];
 }

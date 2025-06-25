@@ -1,0 +1,211 @@
+CAMBIOS NECESARIOS EN EL FRONTEND - CarShare App
+======================================================
+
+RESUMEN DE CAMBIOS BACKEND:
+- Cambio de moneda: CLP (Peso Chileno) → ARS (Peso Argentino)
+- Nuevos tipos de combustible para autos: Nafta Super, Nafta Premium, Diesel
+- Precios diferenciados por tipo de combustible
+- Campo obligatorio "fuelType" al crear/editar autos
+
+======================================================
+1. FORMULARIOS DE AUTO (Crear/Editar Auto)
+======================================================
+
+AGREGAR CAMPO OBLIGATORIO:
+- Campo: "fuelType" 
+- Tipo: Select/Dropdown
+- Opciones: 
+  * "Nafta Super"
+  * "Nafta Premium" 
+  * "Diesel"
+- Requerido: Sí
+- Validación: Debe ser uno de los 3 valores exactos
+
+EJEMPLO DE IMPLEMENTACIÓN:
+```jsx
+<select name="fuelType" required>
+  <option value="">Selecciona tipo de combustible</option>
+  <option value="Nafta Super">Nafta Super</option>
+  <option value="Nafta Premium">Nafta Premium</option>
+  <option value="Diesel">Diesel</option>
+</select>
+```
+
+======================================================
+2. MOSTRAR INFORMACIÓN DE AUTOS
+======================================================
+
+AGREGAR CAMPO EN VISTA/LISTA DE AUTOS:
+- Mostrar: car.fuelType
+- Ubicación: Junto a marca, modelo, año, eficiencia
+
+EJEMPLO:
+```
+Toyota Corolla 2023
+Eficiencia: 14.5 km/L
+Combustible: Nafta Premium  ← NUEVO CAMPO
+```
+
+======================================================
+3. CAMBIOS EN MONEDA
+======================================================
+
+ACTUALIZAR TODAS LAS REFERENCIAS DE MONEDA:
+- Cambiar "CLP" por "ARS" 
+- Cambiar "$" chileno por "$" argentino
+- Actualizar labels: "Peso Chileno" → "Peso Argentino"
+
+ARCHIVOS/COMPONENTES A REVISAR:
+- Calculadora de costos
+- Resúmenes de sesiones
+- Reportes de gastos
+- Dashboard de costos
+- Cualquier visualización de precios
+
+======================================================
+4. VALIDACIONES FRONTEND
+======================================================
+
+AGREGAR VALIDACIÓN PARA fuelType:
+```javascript
+fuelType: {
+  required: "El tipo de combustible es obligatorio",
+  validate: (value) => 
+    ["Nafta Super", "Nafta Premium", "Diesel"].includes(value) || 
+    "Tipo de combustible inválido"
+}
+```
+
+======================================================
+5. TIPOS/INTERFACES TYPESCRIPT
+======================================================
+
+ACTUALIZAR INTERFAZ DE AUTO:
+```typescript
+interface Car {
+  id: string;
+  model: string;
+  brand: string;
+  year: number;
+  fuelEfficiency: number;
+  fuelType: 'Nafta Super' | 'Nafta Premium' | 'Diesel'; // ← NUEVO
+  admin: string;
+  users: string[];
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+```
+
+ACTUALIZAR RESPONSES DE COSTO:
+```typescript
+interface FuelConsumptionResponse {
+  sessionId: string;
+  distance: number;
+  fuelConsumption: number;
+  unit: 'ARS'; // ← Cambiar de 'CLP' a 'ARS'
+}
+
+interface TotalCostResponse {
+  userId: string;
+  totalSessions: number;
+  totalDistance: number;
+  totalCost: number;
+  currency: 'ARS'; // ← Cambiar de 'CLP' a 'ARS'
+}
+```
+
+======================================================
+6. TEXTOS Y LABELS
+======================================================
+
+ACTUALIZAR TEXTOS:
+- "Peso Chileno" → "Peso Argentino"
+- "CLP" → "ARS"
+- Agregar etiquetas para tipo de combustible
+
+NUEVOS LABELS:
+- "Tipo de Combustible"
+- "Nafta Super"
+- "Nafta Premium" 
+- "Diesel"
+
+======================================================
+7. PRECIOS DE REFERENCIA (Para mostrar al usuario)
+======================================================
+
+PRECIOS ACTUALES POR LITRO (ARS):
+- Nafta Super: $1,200
+- Nafta Premium: $1,400
+- Diesel: $1,250
+
+PUEDE MOSTRAR ESTO EN:
+- Tooltip de ayuda
+- Calculadora de costos estimados
+- Información adicional del auto
+
+======================================================
+8. TESTING
+======================================================
+
+PROBAR:
+✓ Crear auto sin fuelType (debe fallar)
+✓ Crear auto con fuelType inválido (debe fallar)
+✓ Crear auto con cada tipo de combustible válido
+✓ Editar auto y cambiar tipo de combustible
+✓ Verificar cálculos de costo con diferentes tipos
+✓ Verificar que moneda se muestra como ARS
+
+======================================================
+9. MIGRACIÓN DE DATOS EXISTENTES
+======================================================
+
+AUTOS EXISTENTES SIN fuelType:
+- El backend asigna "Nafta Super" por defecto
+- Frontend debe manejar autos sin fuelType graciosamente
+- Sugerir al usuario actualizar autos antiguos
+
+======================================================
+10. EJEMPLO DE REQUEST AL CREAR AUTO
+======================================================
+
+ANTES:
+```json
+{
+  "model": "Corolla",
+  "brand": "Toyota",
+  "year": 2023,
+  "fuelEfficiency": 14.5,
+  "admin": "507f1f77bcf86cd799439011"
+}
+```
+
+AHORA (OBLIGATORIO):
+```json
+{
+  "model": "Corolla",
+  "brand": "Toyota", 
+  "year": 2023,
+  "fuelEfficiency": 14.5,
+  "fuelType": "Nafta Premium",
+  "admin": "507f1f77bcf86cd799439011"
+}
+```
+
+======================================================
+PRIORIDADES DE IMPLEMENTACIÓN:
+======================================================
+
+1. 🔴 CRÍTICO: Agregar campo fuelType a formularios
+2. 🔴 CRÍTICO: Actualizar interfaces TypeScript
+3. 🟡 IMPORTANTE: Cambiar referencias de moneda CLP → ARS
+4. 🟡 IMPORTANTE: Mostrar fuelType en vistas de autos
+5. 🟢 OPCIONAL: Mostrar precios de referencia
+6. 🟢 OPCIONAL: Migrar autos existentes
+
+======================================================
+¡IMPORTANTE!
+======================================================
+- El campo fuelType es OBLIGATORIO desde ahora
+- Sin este campo, la creación de autos fallará
+- Todos los cálculos de costo han cambiado de CLP a ARS
+- Los precios son diferentes según el tipo de combustible

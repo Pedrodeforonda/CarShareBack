@@ -29,6 +29,14 @@ const carSchema = new Schema<ICar, CarModel>({
     max: [50, 'Fuel efficiency cannot exceed 50 km/liter'],
     default: 11.5
   },
+  fuelType: {
+    type: String,
+    required: [true, 'Fuel type is required'],
+    enum: {
+      values: ['Nafta Super', 'Nafta Premium', 'Diesel'],
+      message: 'Fuel type must be Nafta Super, Nafta Premium, or Diesel'
+    }
+  },
   admin: {
     type: Schema.Types.ObjectId,
     ref: 'User',

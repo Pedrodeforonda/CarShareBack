@@ -106,15 +106,26 @@ export class MqttHandler {
     }
   }
 
-  private async handleSessionStart(userId: string): Promise<void> {
+  private async handleSessionStart(messageString: string): Promise<void> {
     try {
+      // Parse the JSON message
+      const sessionData = JSON.parse(messageString);
+      const { userId, carId } = sessionData;
+
       // Validate userId format
       if (!userId || !userId.match(/^[0-9a-fA-F]{24}$/)) {
         console.error('❌ Invalid user ID format:', userId);
         return;
       }
 
-      await this.mqttService.createSession(userId);
+      // Validate carId format if provided
+      if (carId && !carId.match(/^[0-9a-fA-F]{24}$/)) {
+        console.error('❌ Invalid car ID format:', carId);
+        return;
+      }
+
+      console.log(`📡 Creating session for user: ${userId}${carId ? ` with car: ${carId}` : ''}`);
+      await this.mqttService.createSession(userId, carId);
     } catch (error) {
       console.error('❌ Error handling session start:', error);
     }

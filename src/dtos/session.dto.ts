@@ -45,7 +45,7 @@ export class FuelConsumptionResponseDto {
     this.sessionId = sessionId;
     this.distance = distance;
     this.fuelConsumption = fuelConsumption;
-    this.unit = 'CLP'; // Chilean Peso
+    this.unit = 'ARS'; // Peso Argentino
   }
 }
 
@@ -61,6 +61,6 @@ export class TotalCostResponseDto {
     this.totalSessions = totalSessions;
     this.totalDistance = totalDistance;
     this.totalCost = totalCost;
-    this.currency = 'CLP'; // Chilean Peso
+    this.currency = 'ARS'; // Peso Argentino
   }
 }

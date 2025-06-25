@@ -18,6 +18,9 @@ export const registerCarSchema = z.object({
       .min(1, 'Fuel efficiency must be at least 1 km/liter')
       .max(50, 'Fuel efficiency cannot exceed 50 km/liter')
       .default(11.5),
+    fuelType: z.enum(['Nafta Super', 'Nafta Premium', 'Diesel'], {
+      errorMap: () => ({ message: 'Fuel type must be Nafta Super, Nafta Premium, or Diesel' })
+    }),
     admin: z.string()
       .regex(/^[0-9a-fA-F]{24}$/, 'Invalid admin ID format'),
     users: z.array(z.string().regex(/^[0-9a-fA-F]{24}$/, 'Invalid user ID format'))
