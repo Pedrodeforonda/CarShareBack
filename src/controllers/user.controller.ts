@@ -46,6 +46,17 @@ export class UserController {
     }
   };
 
+  getSessionsByCar = async (req: Request<{ carId: string }>, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const sessions = await this.userService.getSessionsByCar(req.params.carId);
+      res.status(200).json(
+        ResponseHelper.success(sessions, 'Car sessions retrieved successfully')
+      );
+    } catch (error) {
+      next(error);
+    }
+  };
+
   getActiveSession = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const userId = req.query.userId as string;
@@ -91,8 +102,8 @@ export class UserController {
     try {
       const { userId, carId } = req.body;
       
-      // Usar MQTT para iniciar la sesión (simular mensaje del ESP32)
-      await this.mqttHandler.simulateSessionStart(userId);
+      // Usar MQTT para iniciar la sesión con el auto asociado
+      await this.mqttHandler.simulateSessionStart(userId, carId);
       
       // Esperar un momento para que se procese
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -101,7 +112,7 @@ export class UserController {
       const session = await this.userService.getActiveSession(userId);
       
       res.status(201).json(
-        ResponseHelper.created(session, 'Session started successfully')
+        ResponseHelper.created(session, `Session started successfully for car ${carId}`)
       );
     } catch (error) {
       next(error);

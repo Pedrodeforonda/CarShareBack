@@ -4,7 +4,7 @@ import { MqttLiveData, ISession } from '../types/models.js';
 import { AppError } from '../utils/errors.js';
 
 export class MqttService {
-  async createSession(userId: string): Promise<void> {
+  async createSession(userId: string, carId?: string): Promise<void> {
     try {
       // End any existing active sessions for all users
       await Session.updateMany(
@@ -15,11 +15,12 @@ export class MqttService {
       // Create new session
       const newSession = new Session({
         user: userId,
+        car: carId, // Asociar el auto si se proporciona
         isActive: true,
       });
 
       await newSession.save();
-      console.log(`✅ Session created for user: ${userId}`);
+      console.log(`✅ Session created for user: ${userId}${carId ? ` with car: ${carId}` : ''}`);
     } catch (error) {
       console.error('❌ Error creating session:', error);
       throw new AppError('Failed to create session');

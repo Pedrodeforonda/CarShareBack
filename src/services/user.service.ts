@@ -45,6 +45,15 @@ export class UserService {
     return SessionResponseDto.fromSessions(sessions);
   }
 
+  async getSessionsByCar(carId: string): Promise<SessionResponseDto[]> {
+    const sessions = await Session.find({ car: carId })
+      .populate('user', 'name email')
+      .populate('car', 'model brand year fuelEfficiency')
+      .sort({ start_time: -1 });
+
+    return SessionResponseDto.fromSessions(sessions);
+  }
+
   async getActiveSession(userId?: string): Promise<SessionResponseDto | null> {
     const query = userId ? { user: userId, isActive: true } : { isActive: true };
     

@@ -36,6 +36,13 @@ router.get('/sessions/active', userController.getActiveSession);
 router.get('/sessions/:userId', validateRequest(userIdSchema), userController.getSessionsByUser);
 
 /**
+ * @route   GET /user/sessions/car/:carId
+ * @desc    Get sessions by car ID
+ * @access  Public
+ */
+router.get('/sessions/car/:carId', validateRequest(userIdSchema), userController.getSessionsByCar);
+
+/**
  * @route   POST /user/sessions/start
  * @desc    Start a new session
  * @access  Public
