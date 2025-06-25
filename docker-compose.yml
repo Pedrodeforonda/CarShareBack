@@ -38,15 +38,14 @@ services:
     build: .
     container_name: carshare-backend
     restart: always
-    ports:
-      - '3001:3001'
+    network_mode: host
     environment:
       NODE_ENV: development
       PORT: 3001
-      MONGO_URL: mongo
+      MONGO_URL: localhost
       MONGO_USER: admin
       MONGO_PASS: admin
-      MQTT_HOST: host.docker.internal
+      MQTT_HOST: localhost
       MQTT_PORT: 1883
       BCRYPT_ROUNDS: 12
     volumes:
@@ -54,8 +53,6 @@ services:
       - /app/node_modules
     depends_on:
       - mongo
-    networks:
-      - carshare-network
 
 volumes:
   mongo_data:
