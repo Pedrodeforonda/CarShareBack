@@ -23,7 +23,7 @@ class App {
 
   constructor() {
     this.app = express();
-    this.mqttHandler = new MqttHandler();
+    this.mqttHandler = MqttHandler.getInstance(); // Usar singleton
     
     this.initializeMiddlewares();
     this.initializeRoutes();

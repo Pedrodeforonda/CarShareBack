@@ -3,6 +3,7 @@ import { MqttService } from '../services/mqtt.service.js';
 import { config } from '../config/environment.js';
 
 export class MqttHandler {
+  private static instance: MqttHandler;
   private mqttClient: MqttClient | null = null;
   private readonly mqttService: MqttService;
   private reconnectInterval: NodeJS.Timeout | null = null;
@@ -11,6 +12,14 @@ export class MqttHandler {
 
   constructor() {
     this.mqttService = new MqttService();
+  }
+
+  // Singleton pattern
+  public static getInstance(): MqttHandler {
+    if (!MqttHandler.instance) {
+      MqttHandler.instance = new MqttHandler();
+    }
+    return MqttHandler.instance;
   }
 
   connect(): void {

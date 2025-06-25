@@ -10,7 +10,7 @@ export class UserController {
 
   constructor() {
     this.userService = new UserService();
-    this.mqttHandler = new MqttHandler();
+    this.mqttHandler = MqttHandler.getInstance(); // Usar singleton
   }
 
   getFuelConsumption = async (req: Request<{}, {}, FuelConsumptionRequest>, res: Response, next: NextFunction): Promise<void> => {
