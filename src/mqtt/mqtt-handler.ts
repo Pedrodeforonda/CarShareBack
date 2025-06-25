@@ -199,8 +199,20 @@ export class MqttHandler {
 
   // Método para publicar mensajes MQTT
   publishMessage(topic: string, message: string): boolean {
-    if (!this.mqttClient || !this.mqttClient.connected) {
+    console.log(`🔍 Attempting to publish to ${topic}`);
+    console.log(`🔍 MQTT client exists: ${!!this.mqttClient}`);
+    console.log(`🔍 MQTT client connected: ${this.mqttClient?.connected}`);
+    console.log(`🔍 MQTT client ready state: ${this.mqttClient?.connected ? 'connected' : 'disconnected'}`);
+
+    if (!this.mqttClient) {
+      console.error('❌ MQTT client is null. Cannot publish message.');
+      return false;
+    }
+
+    if (!this.mqttClient.connected) {
       console.error('❌ MQTT client not connected. Cannot publish message.');
+      console.log('🔄 Attempting to reconnect...');
+      this.connect(); // Try to reconnect
       return false;
     }
 
