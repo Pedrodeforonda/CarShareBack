@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { UserController } from '../controllers/user.controller.js';
 import { validateRequest } from '../middlewares/validation.middleware.js';
-import { fuelConsumptionSchema, totalCostSchema, sessionIdSchema, startSessionSchema } from '../validations/session.validation.js';
+import { fuelConsumptionSchema, totalCostSchema, sessionIdSchema, startSessionSchema, carIdSchema } from '../validations/session.validation.js';
 import { userIdSchema } from '../validations/user.validation.js';
 
 const router = Router();
@@ -29,18 +29,18 @@ router.get('/sessions', userController.getAllSessions);
 router.get('/sessions/active', userController.getActiveSession);
 
 /**
+ * @route   GET /user/sessions/car/:carId
+ * @desc    Get sessions by car ID
+ * @access  Public
+ */
+router.get('/sessions/car/:carId', validateRequest(carIdSchema), userController.getSessionsByCar);
+
+/**
  * @route   GET /user/sessions/:userId
  * @desc    Get sessions by user ID
  * @access  Public
  */
 router.get('/sessions/:userId', validateRequest(userIdSchema), userController.getSessionsByUser);
-
-/**
- * @route   GET /user/sessions/car/:carId
- * @desc    Get sessions by car ID
- * @access  Public
- */
-router.get('/sessions/car/:carId', validateRequest(userIdSchema), userController.getSessionsByCar);
 
 /**
  * @route   POST /user/sessions/start

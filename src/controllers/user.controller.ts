@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { UserService } from '../services/user.service.js';
 import { ResponseHelper } from '../utils/response.js';
-import { FuelConsumptionRequest, TotalCostRequest, SessionIdRequest, StartSessionRequest } from '../validations/session.validation.js';
+import { FuelConsumptionRequest, TotalCostRequest, SessionIdRequest, StartSessionRequest, CarIdRequest } from '../validations/session.validation.js';
 import { MqttHandler } from '../mqtt/mqtt-handler.js';
 
 export class UserController {
@@ -46,7 +46,7 @@ export class UserController {
     }
   };
 
-  getSessionsByCar = async (req: Request<{ carId: string }>, res: Response, next: NextFunction): Promise<void> => {
+  getSessionsByCar = async (req: Request<CarIdRequest>, res: Response, next: NextFunction): Promise<void> => {
     try {
       const sessions = await this.userService.getSessionsByCar(req.params.carId);
       res.status(200).json(
