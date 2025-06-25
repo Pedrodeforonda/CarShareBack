@@ -3,7 +3,7 @@ import { ISession, ILocation } from '../types/models.js';
 
 export class SessionResponseDto {
   id: string;
-  user: string;
+  user: { name: string; email: string } | string;
   car?: string;
   startTime: Date;
   endTime?: Date;
@@ -15,7 +15,14 @@ export class SessionResponseDto {
 
   constructor(session: ISession & { _id: Types.ObjectId; createdAt?: Date; updatedAt?: Date }) {
     this.id = session._id.toString();
-    this.user = session.user.toString();
+    if (session.user && typeof session.user === 'object' && 'name' in session.user && 'email' in session.user) {
+      this.user = {
+        name: (session.user as any).name,
+        email: (session.user as any).email
+      };
+    } else {
+      this.user = session.user?.toString();
+    }
     this.car = session.car?.toString();
     this.startTime = session.start_time;
     this.endTime = session.end_time;
