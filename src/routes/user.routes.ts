@@ -22,18 +22,18 @@ router.post('/consumption', validateRequest(fuelConsumptionSchema), userControll
 router.get('/sessions', userController.getAllSessions);
 
 /**
- * @route   GET /user/sessions/:userId
- * @desc    Get sessions by user ID
- * @access  Public
- */
-router.get('/sessions/:userId', validateRequest(userIdSchema), userController.getSessionsByUser);
-
-/**
  * @route   GET /user/sessions/active
  * @desc    Get active session
  * @access  Public
  */
 router.get('/sessions/active', userController.getActiveSession);
+
+/**
+ * @route   GET /user/sessions/:userId
+ * @desc    Get sessions by user ID
+ * @access  Public
+ */
+router.get('/sessions/:userId', validateRequest(userIdSchema), userController.getSessionsByUser);
 
 /**
  * @route   POST /user/cost
