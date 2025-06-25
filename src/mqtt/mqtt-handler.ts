@@ -197,18 +197,79 @@ export class MqttHandler {
     return this.mqttClient?.connected || false;
   }
 
+  // Método para publicar mensajes MQTT
+  publishMessage(topic: string, message: string): boolean {
+    if (!this.mqttClient || !this.mqttClient.connected) {
+      console.error('❌ MQTT client not connected. Cannot publish message.');
+      return false;
+    }
+
+    try {
+      this.mqttClient.publish(topic, message, { qos: 0 }, (error) => {
+        if (error) {
+          console.error(`❌ Error publishing to ${topic}:`, error);
+        } else {
+          console.log(`📤 Message published to ${topic}: ${message}`);
+        }
+      });
+      return true;
+    } catch (error) {
+      console.error(`❌ Failed to publish to ${topic}:`, error);
+      return false;
+    }
+  }
+
   async getActiveSession() {
     return this.mqttService.getActiveSessionData();
   }
 
+  // Método para verificar el estado de la conexión y sesión
+  getMqttStatus() {
+    return {
+      connected: this.isConnected(),
+      reconnectAttempts: this.reconnectAttempts,
+      maxReconnectAttempts: this.maxReconnectAttempts
+    };
+  }
+
   // Métodos para simular mensajes MQTT desde endpoints HTTP
   async simulateSessionStart(userId: string, carId?: string): Promise<void> {
-    console.log(`🎭 Simulating MQTT session start for user: ${userId}${carId ? ` with car: ${carId}` : ''}`);
+    console.log(`🎭 Starting session for user: ${userId}${carId ? ` with car: ${carId}` : ''}`);
+    
+    // 1. Crear la sesión en la base de datos
     await this.mqttService.createSession(userId, carId);
+    
+    // 2. Enviar comando MQTT al ESP32 para iniciar sesión
+    const sessionData = {
+      userId,
+      carId: carId || null
+    };
+    
+    const success = this.publishMessage(
+      'carshare/inel00/session/start', 
+      JSON.stringify(sessionData)
+    );
+    
+    if (success) {
+      console.log(`✅ Session start command sent to ESP32`);
+    } else {
+      console.error(`❌ Failed to send session start command to ESP32`);
+    }
   }
 
   async simulateSessionStop(): Promise<void> {
-    console.log(`🎭 Simulating MQTT session stop`);
+    console.log(`🎭 Stopping active session`);
+    
+    // 1. Terminar la sesión en la base de datos
     await this.handleSessionStop();
+    
+    // 2. Enviar comando MQTT al ESP32 para parar sesión
+    const success = this.publishMessage('carshare/inel00/session/stop', '{}');
+    
+    if (success) {
+      console.log(`✅ Session stop command sent to ESP32`);
+    } else {
+      console.error(`❌ Failed to send session stop command to ESP32`);
+    }
   }
 }

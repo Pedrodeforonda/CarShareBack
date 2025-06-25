@@ -63,4 +63,11 @@ router.post('/sessions/stop', userController.stopSession);
  */
 router.post('/cost', validateRequest(totalCostSchema), userController.getTotalCost);
 
+/**
+ * @route   GET /user/status
+ * @desc    Get MQTT and session status
+ * @access  Public
+ */
+router.get('/status', userController.getMqttStatus);
+
 export default router;

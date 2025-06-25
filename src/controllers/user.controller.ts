@@ -131,4 +131,21 @@ export class UserController {
       next(error);
     }
   };
+
+  // Endpoint para verificar estado de MQTT y sesión
+  getMqttStatus = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const mqttStatus = this.mqttHandler.getMqttStatus();
+      const activeSession = await this.userService.getActiveSession();
+      
+      res.status(200).json(
+        ResponseHelper.success({
+          mqtt: mqttStatus,
+          activeSession: activeSession
+        }, 'MQTT and session status retrieved successfully')
+      );
+    } catch (error) {
+      next(error);
+    }
+  };
 }
