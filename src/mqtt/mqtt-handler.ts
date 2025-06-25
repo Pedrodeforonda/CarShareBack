@@ -189,4 +189,15 @@ export class MqttHandler {
   async getActiveSession() {
     return this.mqttService.getActiveSessionData();
   }
+
+  // Métodos para simular mensajes MQTT desde endpoints HTTP
+  async simulateSessionStart(userId: string): Promise<void> {
+    console.log(`🎭 Simulating MQTT session start for user: ${userId}`);
+    await this.handleSessionStart(userId);
+  }
+
+  async simulateSessionStop(): Promise<void> {
+    console.log(`🎭 Simulating MQTT session stop`);
+    await this.handleSessionStop();
+  }
 }

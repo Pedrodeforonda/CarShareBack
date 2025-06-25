@@ -1,13 +1,16 @@
 import { Request, Response, NextFunction } from 'express';
 import { UserService } from '../services/user.service.js';
 import { ResponseHelper } from '../utils/response.js';
-import { FuelConsumptionRequest, TotalCostRequest, SessionIdRequest } from '../validations/session.validation.js';
+import { FuelConsumptionRequest, TotalCostRequest, SessionIdRequest, StartSessionRequest } from '../validations/session.validation.js';
+import { MqttHandler } from '../mqtt/mqtt-handler.js';
 
 export class UserController {
   private userService: UserService;
+  private mqttHandler: MqttHandler;
 
   constructor() {
     this.userService = new UserService();
+    this.mqttHandler = new MqttHandler();
   }
 
   getFuelConsumption = async (req: Request<{}, {}, FuelConsumptionRequest>, res: Response, next: NextFunction): Promise<void> => {
@@ -78,6 +81,40 @@ export class UserController {
       const session = await this.userService.getSessionById(req.params.id);
       res.status(200).json(
         ResponseHelper.success(session, 'Session retrieved successfully')
+      );
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  startSession = async (req: Request<{}, {}, StartSessionRequest>, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const { userId, carId } = req.body;
+      
+      // Usar MQTT para iniciar la sesión (simular mensaje del ESP32)
+      await this.mqttHandler.simulateSessionStart(userId);
+      
+      // Esperar un momento para que se procese
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Obtener la sesión creada
+      const session = await this.userService.getActiveSession(userId);
+      
+      res.status(201).json(
+        ResponseHelper.created(session, 'Session started successfully')
+      );
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  stopSession = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      // Usar MQTT para parar la sesión
+      await this.mqttHandler.simulateSessionStop();
+      
+      res.status(200).json(
+        ResponseHelper.success(null, 'Session stopped successfully')
       );
     } catch (error) {
       next(error);

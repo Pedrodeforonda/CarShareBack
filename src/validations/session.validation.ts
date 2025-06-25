@@ -18,6 +18,14 @@ export const totalCostSchema = z.object({
   })
 });
 
+export const startSessionSchema = z.object({
+  body: z.object({
+    userId: z.string().regex(/^[0-9a-fA-F]{24}$/, 'Invalid user ID format'),
+    carId: z.string().regex(/^[0-9a-fA-F]{24}$/, 'Invalid car ID format').optional()
+  })
+});
+
 export type SessionIdRequest = z.infer<typeof sessionIdSchema>['params'];
 export type FuelConsumptionRequest = z.infer<typeof fuelConsumptionSchema>['body'];
 export type TotalCostRequest = z.infer<typeof totalCostSchema>['body'];
+export type StartSessionRequest = z.infer<typeof startSessionSchema>['body'];

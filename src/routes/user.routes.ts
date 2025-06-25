@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { UserController } from '../controllers/user.controller.js';
 import { validateRequest } from '../middlewares/validation.middleware.js';
-import { fuelConsumptionSchema, totalCostSchema, sessionIdSchema } from '../validations/session.validation.js';
+import { fuelConsumptionSchema, totalCostSchema, sessionIdSchema, startSessionSchema } from '../validations/session.validation.js';
 import { userIdSchema } from '../validations/user.validation.js';
 
 const router = Router();
@@ -34,6 +34,20 @@ router.get('/sessions/active', userController.getActiveSession);
  * @access  Public
  */
 router.get('/sessions/:userId', validateRequest(userIdSchema), userController.getSessionsByUser);
+
+/**
+ * @route   POST /user/sessions/start
+ * @desc    Start a new session
+ * @access  Public
+ */
+router.post('/sessions/start', validateRequest(startSessionSchema), userController.startSession);
+
+/**
+ * @route   POST /user/sessions/stop
+ * @desc    Stop active session
+ * @access  Public
+ */
+router.post('/sessions/stop', userController.stopSession);
 
 /**
  * @route   POST /user/cost
