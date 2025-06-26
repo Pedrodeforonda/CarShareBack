@@ -130,10 +130,14 @@ export class MqttHandler {
   // Handle state data from ESP32
   private async handleStateData(data: string): Promise<void> {
     try {
-      // You can parse and store or process the state data as needed
       const state = JSON.parse(data);
       console.log('📊 Appending state data:', state);
-      await this.mqttService.appendData(state);
+      // Only append if session is active
+      if (state.session === true) {
+        await this.mqttService.appendData(data); // Pass raw JSON string
+      } else {
+        console.log('⏸️ Session not active, state data not appended.');
+      }
     } catch (error) {
       console.error('❌ Error handling state data:', error);
     }
