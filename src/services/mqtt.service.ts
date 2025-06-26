@@ -62,6 +62,7 @@ export class MqttService {
         throw new AppError('Invalid distance data');
       }
 
+      // Extra safeguard: only append if there is an active session
       const session = await Session.findOne({ isActive: true });
       if (!session) {
         console.log('⚠️ No active session found for data append');
@@ -77,7 +78,6 @@ export class MqttService {
       if (Math.abs(location.latitude) > 90 || Math.abs(location.longitude) > 180) {
         throw new AppError('Invalid GPS coordinates');
       }
-
       session.location.push(location);
       session.distance = distance;
       await session.save();
