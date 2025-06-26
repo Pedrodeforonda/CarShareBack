@@ -79,7 +79,11 @@ export class MqttHandler {
     const topics = [
       'carshare/inel00/session/#',
       'carshare/inel00/01/data/#',
-      'carshare/inel00/01/data/live' // Explicit subscription for carshare/inel00/01/data/live
+      'carshare/inel00/01/data/live', // Explicit subscription for carshare/inel00/01/data/live
+      // Added subscriptions for car 00 topics (ESP32)
+      'carshare/inel00/00/#',
+      'carshare/inel00/00/state',
+      'carshare/inel00/00/session/status'
     ];
 
     topics.forEach(topic => {
@@ -106,6 +110,7 @@ export class MqttHandler {
           this.handleSessionStop();
           break;
         case 'carshare/inel00/01/data/live':
+        case 'carshare/inel00/00/data/live': // Handle live data for car 00
           this.handleLiveData(messageString);
           break;
         default:
