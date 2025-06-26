@@ -48,27 +48,29 @@ export class MqttService {
 
   async appendData(dataJson: string): Promise<void> {
     try {
-      const data: MqttLiveData = JSON.parse(dataJson);
-      
+      const data: any = JSON.parse(dataJson);
+      // Accept both string and number for lat/lng/distance
+      let lat = data.loc && (typeof data.loc.lat === 'string' ? parseFloat(data.loc.lat) : data.loc.lat);
+      let lng = data.loc && (typeof data.loc.lng === 'string' ? parseFloat(data.loc.lng) : data.loc.lng);
+      let distance = typeof data.distance === 'string' ? parseFloat(data.distance) : data.distance;
+
       // Validate data structure
-      if (!data.loc || typeof data.loc.lat !== 'number' || typeof data.loc.lng !== 'number') {
+      if (!data.loc || typeof lat !== 'number' || isNaN(lat) || typeof lng !== 'number' || isNaN(lng)) {
         throw new AppError('Invalid location data format');
       }
-
-      if (typeof data.distance !== 'number' || data.distance < 0) {
+      if (typeof distance !== 'number' || isNaN(distance) || distance < 0) {
         throw new AppError('Invalid distance data');
       }
 
       const session = await Session.findOne({ isActive: true });
-
       if (!session) {
         console.log('⚠️ No active session found for data append');
         return;
       }
 
       const location = new Location({ 
-        latitude: data.loc.lat, 
-        longitude: data.loc.lng 
+        latitude: lat, 
+        longitude: lng 
       });
 
       // Validate location coordinates
@@ -77,10 +79,9 @@ export class MqttService {
       }
 
       session.location.push(location);
-      session.distance = data.distance;
-
+      session.distance = distance;
       await session.save();
-      console.log(`📍 Data appended to session: ${session._id}, Distance: ${data.distance}km`);
+      console.log(`📍 Data appended to session: ${session._id}, Distance: ${distance}km`);
     } catch (error) {
       if (error instanceof SyntaxError) {
         console.error('❌ Invalid JSON data:', dataJson);
