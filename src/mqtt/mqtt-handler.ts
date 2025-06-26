@@ -113,45 +113,11 @@ export class MqttHandler {
         case 'carshare/inel00/00/data/live': // Handle live data for car 00
           this.handleLiveData(messageString);
           break;
-        case 'carshare/inel00/00/state':
-          this.handleStateData(messageString);
-          break;
-        case 'carshare/inel00/00/session/status':
-          this.handleSessionStatus(messageString);
-          break;
         default:
           console.log(`⚠️ Unhandled topic: ${topic}`);
       }
     } catch (error) {
       console.error(`❌ Error processing message from ${topic}:`, error);
-    }
-  }
-
-  // Handle state data from ESP32
-  private async handleStateData(data: string): Promise<void> {
-    try {
-      const state = JSON.parse(data);
-      console.log('📊 Appending state data:', state);
-      // Only append if session is active
-      if (state.session === true) {
-        await this.mqttService.appendData(data); // Pass raw JSON string
-      } else {
-        console.log('⏸️ Session not active, state data not appended.');
-      }
-    } catch (error) {
-      console.error('❌ Error handling state data:', error);
-    }
-  }
-
-  // Handle session status updates from ESP32
-  private async handleSessionStatus(data: string): Promise<void> {
-    try {
-      const status = JSON.parse(data);
-      console.log('📊 Received session status:', status);
-      // You can store or process the session status as needed
-      // For example, update session status in DB or log it
-    } catch (error) {
-      console.error('❌ Error handling session status:', error);
     }
   }
 
