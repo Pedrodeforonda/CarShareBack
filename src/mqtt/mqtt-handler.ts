@@ -78,7 +78,8 @@ export class MqttHandler {
 
     const topics = [
       'carshare/inel00/session/#',
-      'carshare/inel00/01/data/#'
+      'carshare/inel00/01/data/#',
+      'carshare/inel00/01/data/live' // Explicit subscription for carshare/inel00/01/data/live
     ];
 
     topics.forEach(topic => {
